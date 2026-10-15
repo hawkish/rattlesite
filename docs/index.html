@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rattle</title>
+  <meta name="description" content="Lists you rattle off. A shopping list for iPhone that Apple's on-device model can rearrange for you.">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>
+    :root {
+      --bg: #fff8f2;
+      --bg-glow: #ffe2c8;
+      --text: #2b1a10;
+      --muted: #7a5a45;
+      --card: #ffffff;
+      --card-border: rgba(230, 96, 29, 0.18);
+      --accent: #e6601d;
+      --accent-2: #f9a825;
+      --tick: #e6601d;
+      --shadow: 0 10px 30px rgba(150, 60, 10, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b120c;
+        --bg-glow: #3a2010;
+        --text: #f6e8dc;
+        --muted: #c2a38c;
+        --card: #261911;
+        --card-border: rgba(255, 135, 55, 0.25);
+        --accent: #ff8737;
+        --accent-2: #ffc23a;
+        --tick: #ff8737;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(ellipse at top, var(--bg-glow) 0%, var(--bg) 60%);
+      background-repeat: no-repeat;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 56px 16px 60px;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 560px;
+      margin-bottom: 40px;
+    }
+
+    .icon {
+      width: 128px;
+      height: 128px;
+      border-radius: 28px;
+      box-shadow: 0 12px 32px rgba(230, 96, 29, 0.35);
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      margin-top: 6px;
+      font-size: 1.25rem;
+      color: var(--muted);
+    }
+
+    .divider {
+      width: 220px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      margin: 0 auto 40px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 32px 36px;
+      max-width: 560px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin: 24px 0 8px;
+    }
+
+    p, li {
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    p + p {
+      margin-top: 12px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    strong {
+      color: var(--text);
+    }
+
+    em {
+      color: var(--text);
+    }
+
+    /* A list as the app shows it, with a request in the bar beneath. */
+    .demo {
+      margin-top: 20px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 0.98rem;
+    }
+
+    .demo .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 0;
+      color: var(--text);
+    }
+
+    .demo .sub {
+      padding-left: 28px;
+    }
+
+    .demo .group {
+      font-weight: 600;
+    }
+
+    .demo .box {
+      width: 17px;
+      height: 17px;
+      flex: none;
+      border: 1.5px solid var(--muted);
+      border-radius: 50%;
+    }
+
+    .demo .done .box {
+      border-color: var(--tick);
+      background: var(--tick);
+      box-shadow: inset 0 0 0 2.5px var(--card);
+    }
+
+    .demo .done span {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .demo .prompt {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      background: linear-gradient(to right, var(--accent), var(--accent-2));
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 14px 24px;
+      background: linear-gradient(to bottom, var(--accent), #d4511a);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(230, 96, 29, 0.3);
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    .footnote {
+      margin-top: 16px;
+      font-size: 0.85rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 26px 22px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <img src="icon.png" alt="" class="icon" width="128" height="128">
+    <h1>Rattle</h1>
+    <p class="tagline">Lists you rattle off.</p>
+  </header>
+  <div class="divider"></div>
+
+  <main>
+    <section class="card">
+      <h2>A list you can talk to</h2>
+      <p>Rattle is a list for your iPhone: groceries, errands, things to remember. You tap, swipe and drag it like Reminders.</p>
+      <p>Some changes take a dozen taps but only a sentence to say. For those, ask Apple's on-device model, and it rearranges the list for you: <em>group these by aisle</em>, <em>split Dairy into Cheese and Spreads</em>, <em>move the batteries under Hardware</em>, <em>I bought the milk</em>.</p>
+
+      <div class="demo" aria-hidden="true">
+        <div class="row group"><div class="box"></div><span>Produce</span></div>
+        <div class="row sub done"><div class="box"></div><span>apples</span></div>
+        <div class="row sub"><div class="box"></div><span>spinach</span></div>
+        <div class="row group"><div class="box"></div><span>Dairy</span></div>
+        <div class="row sub done"><div class="box"></div><span>milk</span></div>
+        <div class="row sub"><div class="box"></div><span>butter</span></div>
+        <div class="row"><div class="box"></div><span>batteries</span></div>
+        <div class="prompt">move the batteries under Hardware</div>
+      </div>
+
+      <h3>What it does</h3>
+      <ul>
+        <li><strong>Groups and subitems.</strong> Any item can hold others. Tick a group to tick everything in it.</li>
+        <li><strong>Undo for every request.</strong> If the assistant gets it wrong, one tap puts the list back.</li>
+        <li><strong>Seventeen languages.</strong> Ask in your own language, and the reply comes back in it.</li>
+        <li><strong>Export to Markdown.</strong> Share any list as a plain checklist.</li>
+        <li><strong>Works without the assistant.</strong> Adding, ticking, reordering and deleting never need the model.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Requirements</h2>
+      <p>The assistant uses Apple Intelligence and needs an iPhone that supports it, with Apple Intelligence turned on. On any other iPhone, Rattle is still a complete list app.</p>
+    </section>
+
+    <section class="card">
+      <h2>Need help?</h2>
+      <p>Have a question, found a bug, or got an idea? Open a support request, or send a mail.</p>
+      <a class="btn" href="https://github.com/hawkish/rattlesite/issues/new">Open a support request <sup style="font-size: 0.65em;">&#9733;</sup></a>
+      <br>
+      <a id="support-email" class="btn" href="#" style="margin-top: 12px;">Write a support mail</a>
+      <p class="footnote">&#9733; Requires a GitHub account.</p>
+    </section>
+
+    <script>
+      (function() {
+        var u = 'mortenhogh';
+        var d = 'gmail.com';
+        var el = document.getElementById('support-email');
+        el.href = 'mailto:' + u + '@' + d + '?subject=Rattle';
+      })();
+    </script>
+
+    <section class="card" id="privacy">
+      <h2>Privacy policy</h2>
+      <p><strong>Rattle collects no data.</strong> There are no accounts, no analytics, no ads and no tracking, and the app makes no network requests of its own.</p>
+      <p>Your lists are stored as files on your iPhone and never leave it, unless you share or export one yourself.</p>
+      <p>The assistant runs on Apple's on-device model. What you ask it, and the list it reads to answer, are processed on your iPhone and aren't sent to us or anyone else.</p>
+      <p>Rattle has no in-app purchases or subscriptions.</p>
+    </section>
+  </main>
+
+  <footer>&copy; Rattle</footer>
+
+</body>
+</html>
